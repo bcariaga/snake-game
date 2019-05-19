@@ -32,18 +32,71 @@ namespace snake_game
             public int xPos { get; set; }
             public int yPos { get; set; }
             public ConsoleColor color { get; set; }
+
+            protected virtual void Draw(int? x = null, int? y = null, string chars = "■")
+            {
+                Console.SetCursorPosition(x ?? xPos, y ?? yPos);
+                Console.ForegroundColor = color;
+                Console.Write(chars);
+            }
         }
 
-        public class SnakeBody : Pixel
+        public class Snake : Pixel
         {
-            public SnakeBody(int xPosition, int yPosition, ConsoleColor colorPixel) : base(xPosition, yPosition, colorPixel)
+            public Snake(int xPosition, int yPosition, ConsoleColor colorPixel) : base(xPosition, yPosition, colorPixel)
             {
                 xTale = new List<int>();
                 yTale = new List<int>();
             }
             public List<int> xTale { get; set; }
             public List<int> yTale { get; set; }
+            public bool IsCanibal { get; set; } = false;
+            public void Appear()
+            {
+                for (int i = 0; i < xTale.Count(); i++)
+                {
+                    base.Draw(xTale[i], yTale[i], "¦");
+                    if (xTale[i] == xPos && yTale[i] == yPos)
+                    {
+                        IsCanibal = true;
+                        return;
+                    }
+                }
+                base.Draw();//head
+            }
 
+            public void Grow()
+            {
+                xTale.Add(xPos);
+                yTale.Add(yPos);
+            }
+
+            public void Reduce()
+            {
+                xTale.RemoveAt(0);
+                yTale.RemoveAt(0);
+            }
+
+
+            //TODO: Polymorphism??
+            public void Move(MoveTo currentMove)
+            {
+                switch (currentMove)
+                {
+                    case MoveTo.Right:
+                        xPos++;
+                        break;
+                    case MoveTo.Left:
+                        xPos--;
+                        break;
+                    case MoveTo.Up:
+                        yPos--;
+                        break;
+                    case MoveTo.Down:
+                        yPos++;
+                        break;
+                }
+            }
         }
 
         public enum MoveTo
@@ -177,9 +230,9 @@ namespace snake_game
 
         public static class Helper
         {
-            public static bool DidCrash(SnakeBody snake, Screen screen) =>
+            public static bool DidCrash(Snake snake, Screen screen) =>
                 (snake.xPos == screen.Width - 1 || snake.xPos == 0 || snake.yPos == screen.Height - 1 || snake.yPos == 0);
-            public static bool DidEat(SnakeBody snake, Food food) =>
+            public static bool DidEat(Snake snake, Food food) =>
                 (food.xPos == snake.xPos && food.yPos == snake.yPos);
             public static bool KeyCoolDown(DateTime endTime, DateTime beginTime, int keyCooldownMs) =>
                 endTime.Subtract(beginTime).TotalMilliseconds < keyCooldownMs;
@@ -253,7 +306,7 @@ namespace snake_game
                 this.xPos = RandomNumber(1, screen.Width - 2);
                 this.yPos = RandomNumber(1, screen.Height - 2);
             }
-
+            public void Appear() => base.Draw();
             readonly Screen screen;
         }
 
@@ -272,7 +325,7 @@ namespace snake_game
         private static void Play(Settings settings)
         {
             //on the middle of the screen
-            var snake = new SnakeBody(
+            var snake = new Snake(
                 settings.Screen.Width / 2,
                 settings.Screen.Height / 2,
                 settings.SnakeBodyColor);
@@ -295,19 +348,12 @@ namespace snake_game
                     food.Respaw();
                 }
 
-                for (int i = 0; i < snake.xTale.Count(); i++)
-                {
-                    Console.SetCursorPosition(snake.xTale[i], snake.yTale[i]);
-                    Console.Write("¦");
-                    if (snake.xTale[i] == snake.xPos && snake.yTale[i] == snake.yPos)
-                    {
-                        status.End();
-                    }
-                }
+                snake.Appear();
 
-                DrawPixels(snake.xPos, snake.yPos, snake.color);
+                if (snake.IsCanibal)
+                    status.End();
 
-                DrawPixels(food.xPos, food.yPos, food.color);
+                food.Appear();
 
                 Console.CursorVisible = false;
 
@@ -318,32 +364,14 @@ namespace snake_game
                     status.Tick();
                     status.UpdateMove(ReadMovement(status.CurrentMove));
                 }
-                
 
-                snake.xTale.Add(snake.xPos);
-                snake.yTale.Add(snake.yPos);
 
-                switch (status.CurrentMove)
-                {
-                    case MoveTo.Right:
-                        snake.xPos++;
-                        break;
-                    case MoveTo.Left:
-                        snake.xPos--;
-                        break;
-                    case MoveTo.Up:
-                        snake.yPos--;
-                        break;
-                    case MoveTo.Down:
-                        snake.yPos++;
-                        break;
-                }
+                snake.Grow();
+
+                snake.Move(status.CurrentMove);
 
                 if (snake.xTale.Count() > status.Score)
-                {
-                    snake.xTale.RemoveAt(0);
-                    snake.yTale.RemoveAt(0);
-                }
+                    snake.Reduce();
             }
         }
         #endregion
