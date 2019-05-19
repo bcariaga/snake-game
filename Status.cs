@@ -10,7 +10,7 @@ namespace snake_game
     /// </summary>
     public class Status
     {
-        public bool Continue { get; private set; }
+        public bool Continue { get; set; }
         public int Score { get; private set; }
         public MoveTo CurrentMove { get; private set; }
         public DateTime BeginTime { get; private set; }
@@ -19,7 +19,6 @@ namespace snake_game
         public void UpdateMove(MoveTo nextMove) => this.CurrentMove = nextMove;
         public void BeginCoolDown() => this.BeginTime = DateTime.Now;
         public void Tick() => this.EndTime = DateTime.Now;
-
         private static Status status;
 
         protected Status()
@@ -39,10 +38,7 @@ namespace snake_game
             return status;
         }
 
-        public void End()
-        {
-            this.Continue = false;
-        }
+       
 
         public void AddScore(int points = 1) =>
             this.Score += points;

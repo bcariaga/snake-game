@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace snake_game
 {
@@ -64,7 +63,11 @@ namespace snake_game
         public bool DidCrash(Screen screen) =>
                 (xPos == screen.Width - 1 || xPos == 0 || yPos == screen.Height - 1 || yPos == 0);
 
-        public bool DidEat(Food food) =>
-                (food.xPos == xPos && food.yPos == yPos);
+        public void TryEat(Food food, Action EatSuccess)
+        {
+            if(food.xPos == xPos && food.yPos == yPos)
+                EatSuccess();
+
+        }
     }
 }
