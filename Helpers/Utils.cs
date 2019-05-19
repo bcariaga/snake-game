@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace snake_game
+namespace snake_game.Helpers
 {
     public class Utils
     {

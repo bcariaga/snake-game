@@ -1,7 +1,10 @@
-﻿using System;
+﻿using snake_game.Configuration;
+using snake_game.IO;
+using snake_game.Objects;
+using System;
 using System.Linq;
 
-namespace snake_game
+namespace snake_game.Games
 {
     //Façade
     public class SnakeGame

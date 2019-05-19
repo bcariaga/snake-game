@@ -1,4 +1,6 @@
-﻿namespace snake_game
+﻿using snake_game.Games;
+
+namespace snake_game
 {
     class Program
     {

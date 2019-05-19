@@ -1,8 +1,9 @@
-﻿using System;
+﻿using snake_game.IO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace snake_game
+namespace snake_game.Objects
 {
     public class Snake : Pixel
     {

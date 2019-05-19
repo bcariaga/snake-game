@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace snake_game
+namespace snake_game.IO
 {
     public class Joystick
     {

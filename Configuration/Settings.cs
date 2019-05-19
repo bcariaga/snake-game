@@ -1,6 +1,7 @@
-﻿using System;
+﻿using snake_game.IO;
+using System;
 
-namespace snake_game
+namespace snake_game.Configuration
 {
     public class Settings
     {

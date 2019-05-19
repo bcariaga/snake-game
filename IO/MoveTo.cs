@@ -1,4 +1,4 @@
-﻿namespace snake_game
+﻿namespace snake_game.IO
 {
     public enum MoveTo
     {

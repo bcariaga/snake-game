@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace snake_game
+namespace snake_game.IO
 {
     public class ScreenManager
     {

@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using snake_game.IO;
+using System;
 
-namespace snake_game
+namespace snake_game.Configuration
 {
     /// <summary>
     /// Status, va a contener los datos del juego mientras el mismo este en ejecucion

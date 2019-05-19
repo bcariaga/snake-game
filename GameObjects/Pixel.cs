@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace snake_game
+namespace snake_game.Objects
 {
     public abstract class Pixel
     {
