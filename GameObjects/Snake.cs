@@ -1,11 +1,12 @@
-﻿using snake_game.IO;
+﻿using snake_game.GameObjects;
+using snake_game.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace snake_game.Objects
 {
-    public class Snake : Pixel
+    public class Snake : Pixel, IShowable
     {
         public Snake(int xPosition, int yPosition, ConsoleColor colorPixel) : base(xPosition, yPosition, colorPixel)
         {

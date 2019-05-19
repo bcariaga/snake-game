@@ -1,10 +1,11 @@
 ﻿using System;
+using snake_game.GameObjects;
 using snake_game.Helpers;
 using snake_game.IO;
 
 namespace snake_game.Objects
 {
-    public class Food : Pixel
+    public class Food : Pixel, IShowable
     {
         public Food(
             Screen screen,

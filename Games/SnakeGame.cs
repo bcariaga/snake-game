@@ -1,4 +1,5 @@
 ﻿using snake_game.Configuration;
+using snake_game.GameObjects;
 using snake_game.IO;
 using snake_game.Objects;
 using System;
@@ -7,13 +8,14 @@ using System.Linq;
 namespace snake_game.Games
 {
     //Façade
-    public class SnakeGame
+    public class SnakeGame : IGame
     {
         /*game management*/
         Settings settings;
         Joystick joystick;
         ScreenManager screenManager;
         Status status = Status.GetStatus();
+        bool isReady = false;
 
         /*UI*/
         Snake snake;
@@ -31,48 +33,30 @@ namespace snake_game.Games
         {
             Console.CursorVisible = false;
             screenManager.DrawBorder();
+            isReady = true;
         }
 
         public void Play(Action<Status, ScreenManager> onEndGame)
         {
+            if (!isReady)
+                throw new ApplicationException("The game isn't ready!");
 
             while (status.Continue)
             {
                 screenManager.ClearConsole();
 
 
-                status.Continue = !snake.DidCrash(settings.Screen) && !snake.IsCanibal;
+                status.Continue = SnakeLive();
 
-                snake.TryEat(food, () => {
-                    status.AddScore();
-                    food.Respaw();
-                });
-
-                snake.Appear();
-
-                food.Appear();
-
-
-                status.BeginCoolDown();
-                while (joystick.KeyCoolDown(status.EndTime, status.BeginTime, settings.KeyCooldown))
-                {
-                    status.Tick();
-                    status.UpdateMove(joystick.ReadMovement(status.CurrentMove));
-                }
-
-                snake.Grow();
-                snake.Move(status.CurrentMove);
-
-                if (snake.xTale.Count() > status.Score)
-                    snake.Reduce();
-
+                AppearElements(snake, food);
+                ReadKey();
             }
 
             onEndGame(status, screenManager);
         }
 
         #region private
-        private static (Settings settings, Joystick joystick, ScreenManager screenManager) GetConfiguration()
+        private (Settings settings, Joystick joystick, ScreenManager screenManager) GetConfiguration()
         {
 
             var settings = new Settings()
@@ -96,12 +80,45 @@ namespace snake_game.Games
 
             return (settings, controller, screenManager);
         }
-        private static (Snake snake, Food food) GetUIElements(Settings settings) => (
+        private (Snake snake, Food food) GetUIElements(Settings settings) => (
                 new Snake(
                    settings.Screen.Width / 2,
                    settings.Screen.Height / 2,
                    settings.SnakeBodyColor),
                 new Food(settings.Screen, settings.FoodColor));
+        private void AppearElements(params IShowable[] elements )
+        {
+            foreach (var element in elements)
+                element.Appear();
+        }
+        private void ReadKey()
+        {
+            //TODO: ¿esto no es responsabilidad del joystick?
+            status.BeginCoolDown();
+            while (joystick.KeyCoolDown(status.EndTime, status.BeginTime, settings.KeyCooldown))
+            {
+                status.Tick();
+                status.UpdateMove(joystick.ReadMovement(status.CurrentMove));
+            }
+
+
+        }
+        private bool SnakeLive()
+        {
+            //TODO: ¿esto no es responsabilidad de la clase Snake?
+            snake.TryEat(food, () => {
+                status.AddScore();
+                food.Respaw();
+            });
+            snake.Grow();
+            snake.Move(status.CurrentMove);
+
+            if (snake.xTale.Count() > status.Score)
+                snake.Reduce();
+
+            return !snake.DidCrash(settings.Screen) && !snake.IsCanibal;
+
+        }
         #endregion
     }
 }
