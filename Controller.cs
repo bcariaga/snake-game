@@ -3,18 +3,9 @@
 
 namespace snake_game
 {
-    public class Controller
+    public class Joystick
     {
 
-        //TODO: (S) from SOLID
-        public void GameOverMessage(int score, Screen screen)
-        {
-            Console.SetCursorPosition(screen.Width / 5, screen.Height / 2);
-            Console.WriteLine("Game over, Score: " + score);
-            Console.SetCursorPosition(screen.Width / 5, screen.Height / 2 + 1);
-            Console.ReadKey();
-
-        }
         public bool KeyCoolDown(DateTime endTime, DateTime beginTime, int keyCooldownMs) =>
                endTime.Subtract(beginTime).TotalMilliseconds < keyCooldownMs;
 

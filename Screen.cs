@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace snake_game
+﻿namespace snake_game
 {
     public class Screen
     {

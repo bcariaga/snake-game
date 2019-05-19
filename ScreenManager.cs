@@ -44,5 +44,14 @@ namespace snake_game
                 Console.Write(blackline);
             }
         }
+
+        public void Print(string msg, bool waitReadKey = true)
+        {
+            Console.SetCursorPosition(Screen.Width / 5, Screen.Height / 2);
+            Console.WriteLine(msg);
+            Console.SetCursorPosition(Screen.Width / 5, Screen.Height / 2 + 1);
+
+            if (waitReadKey) Console.ReadKey();
+        }
     }
 }
