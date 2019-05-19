@@ -13,7 +13,6 @@ namespace snake_game
                 Screen = new Screen(32, 16),
                 FoodColor = ConsoleColor.Cyan,
                 SnakeBodyColor = ConsoleColor.Red,
-                InitialMove = Movement.right,
                 KeyCooldown = 500
             }
            );
@@ -47,13 +46,12 @@ namespace snake_game
 
         }
 
-
-        public class Movement
+        public enum MoveTo
         {
-            public const string right = "RIGHT";
-            public const string left = "LEFT";
-            public const string up = "UP";
-            public const string down = "DOWN";
+            Right,
+            Left,
+            Up,
+            Down
         }
 
         public static int RandomNumber(int min, int max)
@@ -62,26 +60,26 @@ namespace snake_game
             return (randomNummer.Next(min, max));
         }
 
-        public static string ReadMovement(string currentMove)
+        public static MoveTo ReadMovement(MoveTo currentMove)
         {
             if (Console.KeyAvailable)
             {
                 ConsoleKeyInfo toets = Console.ReadKey(true);
-                if (toets.Key.Equals(ConsoleKey.UpArrow) && currentMove != Movement.down)
+                if (toets.Key.Equals(ConsoleKey.UpArrow) && currentMove != MoveTo.Down)
                 {
-                    currentMove = Movement.up;
+                    currentMove = MoveTo.Up;
                 }
-                if (toets.Key.Equals(ConsoleKey.DownArrow) && currentMove != Movement.up)
+                if (toets.Key.Equals(ConsoleKey.DownArrow) && currentMove != MoveTo.Up)
                 {
-                    currentMove = Movement.down;
+                    currentMove = MoveTo.Down;
                 }
-                if (toets.Key.Equals(ConsoleKey.LeftArrow) && currentMove != Movement.right)
+                if (toets.Key.Equals(ConsoleKey.LeftArrow) && currentMove != MoveTo.Right)
                 {
-                    currentMove = Movement.left;
+                    currentMove = MoveTo.Left;
                 }
-                if (toets.Key.Equals(ConsoleKey.RightArrow) && currentMove != Movement.left)
+                if (toets.Key.Equals(ConsoleKey.RightArrow) && currentMove != MoveTo.Left)
                 {
-                    currentMove = Movement.right;
+                    currentMove = MoveTo.Right;
                 }
             }
             return currentMove;
@@ -189,7 +187,7 @@ namespace snake_game
         public class Settings
         {
             public Screen Screen { get; set; }
-            public string InitialMove { get; set; }
+            public MoveTo InitialMove { get; set; }
             public int KeyCooldown { get; set; }
             public ConsoleColor SnakeBodyColor { get; set; }
             public ConsoleColor FoodColor { get; set; }
@@ -203,11 +201,11 @@ namespace snake_game
         {
             public bool Continue { get; private set; }
             public int Score { get; private set; }
-            public string CurrentMove { get; private set; }
+            public MoveTo CurrentMove { get; private set; }
             public DateTime BeginTime { get; private set; }
             public DateTime EndTime { get; private set; }
 
-            public void UpdateMove(string nextMove) => this.CurrentMove = nextMove;
+            public void UpdateMove(MoveTo nextMove) => this.CurrentMove = nextMove;
             public void BeginCoolDown() => this.BeginTime = DateTime.Now;
             public void Tick() => this.EndTime = DateTime.Now;
 
@@ -217,7 +215,7 @@ namespace snake_game
             {
                 //estado inicial
                 this.Continue = true;
-                this.CurrentMove = Movement.right;
+                this.CurrentMove = MoveTo.Right;
                 this.Score = 5;
                 this.EndTime = DateTime.Now;
             }
@@ -327,17 +325,17 @@ namespace snake_game
 
                 switch (status.CurrentMove)
                 {
-                    case Movement.up:
-                        snake.yPos--;
+                    case MoveTo.Right:
+                        snake.xPos++;
                         break;
-                    case Movement.down:
-                        snake.yPos++;
-                        break;
-                    case Movement.left:
+                    case MoveTo.Left:
                         snake.xPos--;
                         break;
-                    case Movement.right:
-                        snake.xPos++;
+                    case MoveTo.Up:
+                        snake.yPos--;
+                        break;
+                    case MoveTo.Down:
+                        snake.yPos++;
                         break;
                 }
 
