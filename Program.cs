@@ -183,8 +183,8 @@ namespace snake_game
                 (snake.xPos == screen.Width - 1 || snake.xPos == 0 || snake.yPos == screen.Height - 1 || snake.yPos == 0);
             public static bool DidEat(SnakeBody snake, Food food) =>
                 (food.xPos == snake.xPos && food.yPos == snake.yPos);
-            public static bool TimeOutToReadKey(DateTime endTime, int keyCooldown) =>
-                endTime.Subtract(DateTime.Now).TotalMilliseconds < keyCooldown;
+            public static bool KeyCoolDown(DateTime endTime, DateTime beginTime, int keyCooldownMs) =>
+                endTime.Subtract(beginTime).TotalMilliseconds < keyCooldownMs;
         }
         public class Settings
         {
@@ -204,8 +204,12 @@ namespace snake_game
             public bool Continue { get; private set; }
             public int Score { get; private set; }
             public string CurrentMove { get; private set; }
+            public DateTime BeginTime { get; private set; }
+            public DateTime EndTime { get; private set; }
 
             public void UpdateMove(string nextMove) => this.CurrentMove = nextMove;
+            public void BeginCoolDown() => this.BeginTime = DateTime.Now;
+            public void Tick() => this.EndTime = DateTime.Now;
 
             private static Status status;
 
@@ -215,6 +219,7 @@ namespace snake_game
                 this.Continue = true;
                 this.CurrentMove = Movement.right;
                 this.Score = 5;
+                this.EndTime = DateTime.Now;
             }
 
             public static Status GetStatus()
@@ -275,7 +280,6 @@ namespace snake_game
                 settings.SnakeBodyColor);
 
             var food = new Food(settings.Screen, settings.FoodColor);
-
             DrawBorder(settings.Screen);
             var status = Status.GetStatus();
             while (status.Continue)
@@ -309,15 +313,14 @@ namespace snake_game
 
                 Console.CursorVisible = false;
 
-                var endtime = DateTime.Now;
-                //TODO: Mejorar
-
-                while (!Helper.TimeOutToReadKey(endtime, settings.KeyCooldown))
+                
+                status.BeginCoolDown();
+                while (Helper.KeyCoolDown(status.EndTime, status.BeginTime, settings.KeyCooldown))
                 {
-                    endtime = DateTime.Now;
-
+                    status.Tick();
                     status.UpdateMove(ReadMovement(status.CurrentMove));
                 }
+                
 
                 snake.xTale.Add(snake.xPos);
                 snake.yTale.Add(snake.yPos);
