@@ -41,7 +41,6 @@ namespace snake_game
             yTale.RemoveAt(0);
         }
 
-
         //TODO: Polymorphism??
         public void Move(MoveTo currentMove)
         {
@@ -61,5 +60,11 @@ namespace snake_game
                     break;
             }
         }
+
+        public bool DidCrash(Screen screen) =>
+                (xPos == screen.Width - 1 || xPos == 0 || yPos == screen.Height - 1 || yPos == 0);
+
+        public bool DidEat(Food food) =>
+                (food.xPos == xPos && food.yPos == yPos);
     }
 }

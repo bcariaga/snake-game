@@ -20,12 +20,7 @@ namespace snake_game
 
         #region Public Classes 
       
-        public static int RandomNumber(int min, int max)
-        {
-            Random randomNummer = new Random();
-            return (randomNummer.Next(min, max));
-        }
-
+        
         public static MoveTo ReadMovement(MoveTo currentMove)
         {
             if (Console.KeyAvailable)
@@ -113,10 +108,6 @@ namespace snake_game
 
         public static class Helper
         {
-            public static bool DidCrash(Snake snake, Screen screen) =>
-                (snake.xPos == screen.Width - 1 || snake.xPos == 0 || snake.yPos == screen.Height - 1 || snake.yPos == 0);
-            public static bool DidEat(Snake snake, Food food) =>
-                (food.xPos == snake.xPos && food.yPos == snake.yPos);
             public static bool KeyCoolDown(DateTime endTime, DateTime beginTime, int keyCooldownMs) =>
                 endTime.Subtract(beginTime).TotalMilliseconds < keyCooldownMs;
         }
@@ -138,10 +129,10 @@ namespace snake_game
 
                 Console.ForegroundColor = ConsoleColor.Green;
 
-                if (Helper.DidCrash(snake, settings.Screen))
+                if (snake.DidCrash(settings.Screen))
                     status.End();
 
-                if (Helper.DidEat(snake, food))
+                if (snake.DidEat(food))
                 {
                     status.AddScore();
                     food.Respaw();
