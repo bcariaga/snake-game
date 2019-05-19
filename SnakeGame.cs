@@ -1,15 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace snake_game
 {
+    //Façade
     public class SnakeGame
     {
         /*game management*/
         Settings settings;
-        Joystick controller;
+        Joystick joystick;
         ScreenManager screenManager;
         Status status = Status.GetStatus();
 
@@ -21,7 +20,7 @@ namespace snake_game
 
         private void Init()
         {
-            (settings, controller, screenManager) = GetConfiguration();
+            (settings, joystick, screenManager) = GetConfiguration();
             (snake, food) = GetUIElements(settings);
         }
 
@@ -52,10 +51,10 @@ namespace snake_game
 
 
                 status.BeginCoolDown();
-                while (controller.KeyCoolDown(status.EndTime, status.BeginTime, settings.KeyCooldown))
+                while (joystick.KeyCoolDown(status.EndTime, status.BeginTime, settings.KeyCooldown))
                 {
                     status.Tick();
-                    status.UpdateMove(controller.ReadMovement(status.CurrentMove));
+                    status.UpdateMove(joystick.ReadMovement(status.CurrentMove));
                 }
 
                 snake.Grow();
@@ -70,7 +69,7 @@ namespace snake_game
         }
 
         #region private
-        private static (Settings settings, Joystick controller, ScreenManager screenManager) GetConfiguration()
+        private static (Settings settings, Joystick joystick, ScreenManager screenManager) GetConfiguration()
         {
 
             var settings = new Settings()
