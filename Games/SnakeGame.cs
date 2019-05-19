@@ -8,6 +8,9 @@ using System.Linq;
 namespace snake_game.Games
 {
     //Façade
+    /// <summary>
+    /// Uso esta clase para aislar toda la logica del juego
+    /// </summary>
     public class SnakeGame : IGame
     {
         /*game management*/
@@ -15,6 +18,9 @@ namespace snake_game.Games
         Joystick joystick;
         ScreenManager screenManager;
         Status status = Status.GetStatus();
+        /// <summary>
+        /// flag para saber si el juego se inicio o no.
+        /// </summary>
         bool isReady = false;
 
         /*UI*/
@@ -23,12 +29,19 @@ namespace snake_game.Games
 
         public SnakeGame() => Init();
 
+        /// <summary>
+        /// Normalmente en el constructor inyectaria los colaboradores, 
+        /// pero en este caso creo las instancias en este metodo
+        /// </summary>
         private void Init()
         {
             (settings, joystick, screenManager) = GetConfiguration();
             (snake, food) = GetUIElements(settings);
         }
 
+        /// <summary>
+        /// Configura la consola y dibuja los bordes del juego
+        /// </summary>
         public void SetUp()
         {
             Console.CursorVisible = false;
@@ -36,6 +49,10 @@ namespace snake_game.Games
             isReady = true;
         }
 
+        /// <summary>
+        /// Da inicio al juego 
+        /// </summary>
+        /// <param name="onEndGame"> cuando el juego termine ¿que hago?</param>
         public void Play(Action<Status, ScreenManager> onEndGame)
         {
             if (!isReady)
@@ -56,6 +73,7 @@ namespace snake_game.Games
         }
 
         #region private
+        //TODO: Single responsibility
         private (Settings settings, Joystick joystick, ScreenManager screenManager) GetConfiguration()
         {
 

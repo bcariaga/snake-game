@@ -6,6 +6,7 @@ namespace snake_game
     {
         static void Main(string[] args)
         {
+            //lets' play a game
             IGame game = new SnakeGame();
 
             game.SetUp();

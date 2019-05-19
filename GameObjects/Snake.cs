@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace snake_game.Objects
 {
+    /// <summary>
+    /// Representa al snake en el canvas y maneja su comportamiento
+    /// </summary>
     public class Snake : Pixel, IShowable
     {
         public Snake(int xPosition, int yPosition, ConsoleColor colorPixel) : base(xPosition, yPosition, colorPixel)

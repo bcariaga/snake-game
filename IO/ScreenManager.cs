@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace snake_game.IO
 {
+    /// <summary>
+    /// Maneja el objeto Screen, para unificar la logica de las salidas.
+    /// </summary>
     public class ScreenManager
     {
         private Screen Screen { get; set; }

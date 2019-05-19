@@ -1,5 +1,8 @@
 ﻿namespace snake_game.IO
 {
+    /// <summary>
+    /// Representacion del canvas donde se va a desarrollar el juego
+    /// </summary>
     public class Screen
     {
         public Screen(int width, int height)

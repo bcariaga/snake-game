@@ -2,6 +2,9 @@
 
 namespace snake_game.Objects
 {
+    /// <summary>
+    /// Template Method, para los elementos de "UI" que necesitan moverse en la pantalla y dibujarse
+    /// </summary>
     public abstract class Pixel
     {
         public Pixel(int xPosition, int yPosition, ConsoleColor colorPixel)

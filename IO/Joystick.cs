@@ -3,12 +3,15 @@
 
 namespace snake_game.IO
 {
+    /// <summary>
+    /// Emula un joystick, leyendo las teclas ingresadas y manejando el cooldown de las mismas
+    /// </summary>
     public class Joystick
     {
-
         public bool KeyCoolDown(DateTime endTime, DateTime beginTime, int keyCooldownMs) =>
                endTime.Subtract(beginTime).TotalMilliseconds < keyCooldownMs;
 
+        //TODO: Mepa que viene bien un observer
         public MoveTo ReadMovement(MoveTo currentMove)
         {
             if (Console.KeyAvailable)

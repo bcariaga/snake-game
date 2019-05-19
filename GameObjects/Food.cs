@@ -5,6 +5,9 @@ using snake_game.IO;
 
 namespace snake_game.Objects
 {
+    /// <summary>
+    /// sabe como administrar el elemento food en el canvas del juego
+    /// </summary>
     public class Food : Pixel, IShowable
     {
         public Food(
